@@ -1,0 +1,27 @@
+.button{
+    padding: 16px 20px;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    cursor: pointer;
+    background-color: #046ee5;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    max-width: 350px;
+    border: 1px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+    justify-content: center;
+    &:focus{
+        border: 1px solid #17a2b8;
+        box-shadow: 0 0 2px 2px #bfdeff;
+    }
+    &:hover{
+        border: 1px solid #17a2b8;
+        box-shadow: 0 0 2px 2px #bfdeff;
+        opacity: 0.9;
+    }
+}

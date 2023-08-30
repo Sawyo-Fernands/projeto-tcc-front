@@ -1,0 +1,82 @@
+.containerMain{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    overflow: hidden;
+    width: 100%;
+    .label{
+        font-size: 18px;
+        font-weight: 600;
+        color: #ebe7e717;
+    }
+    .content{
+        gap: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+        box-shadow: 0 1px 2px #0003;
+        background-color: white;
+        max-width: 350px;
+        padding: 20px;
+        border-radius: 5px;
+        padding: 2rem;
+
+        .labelSingUp{
+            font-size: 16px;
+            color: #676767;
+        }
+        .strongLabel{
+            cursor: pointer;
+
+            a {
+                text-decoration: none;
+                // color: #676767;
+             }
+        }
+    }
+}
+
+.containerPhoto{
+    padding: 0.3rem;
+    width: 50%;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+
+    video{
+        width: 500px;
+        height: 500px;
+    }
+}
+.containerImages{
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    width: 100%;
+    flex-wrap: wrap;
+    .img{
+        width: 200px;
+        height: 200px;
+        padding: 0.3rem;
+    
+        img{
+         width: 200px;
+        height: 200px;
+        }
+    }
+}
+.containerContent{
+    width: 100%;
+    height: 99vh;
+}
+
+.containerTitle{
+    width: 100%;
+    text-align: center;
+    padding: 0.4rem;
+}
