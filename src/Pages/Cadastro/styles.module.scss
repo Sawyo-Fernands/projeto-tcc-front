@@ -60,13 +60,14 @@
     width: 100%;
     flex-wrap: wrap;
     .img{
-        width: 200px;
-        height: 200px;
+        width: 170px;
+        height: 150px;
         padding: 0.3rem;
-    
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        border-radius: 0.25rem;
         img{
-         width: 200px;
-        height: 200px;
+         width: 170px;
+        height: 150px;
         }
     }
 }

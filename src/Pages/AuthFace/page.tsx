@@ -1,12 +1,27 @@
 
 'use client'
 
-import React, { useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import * as faceapi from 'face-api.js';
+import { UserContext } from '@/context/useUser';
+import { api } from '@/services/api/axios';
 
 const VideoRecognition = () => {
   const videoRef = useRef<any>(null);
   const canvasRef = useRef<any>(null);
+  const { dataUser } = useContext(UserContext)
+
+  async function listarImagensUsuario(){
+    const response = await api.get("imagens/visualizar",{
+      params:{
+        usuarioId:dataUser.id,
+        paginacao:80
+      }
+    })
+    return response.data.map((element: { imagemBase64: string; }) =>(
+      element.imagemBase64
+    ))
+  }
 
   useEffect(() => {
     const startVideo = async () => {
@@ -27,13 +42,16 @@ const VideoRecognition = () => {
         faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL),
         faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL),
         faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+        faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+        faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
+        faceapi.nets.ageGenderNet.loadFromUri(MODEL_URL),
       ]);
     };
 
     const runFaceApi = async () => {
       await loadModels();
       const labeledFaceDescriptors = await getLabeledFaceDescriptions();
-      const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors);
+      const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors,0.6);
 
       const video = videoRef.current;
       const canvas = canvasRef.current;
@@ -44,8 +62,10 @@ const VideoRecognition = () => {
 
       setInterval(async () => {
         const detections = await faceapi
-          .detectAllFaces(video)
+          .detectAllFaces(video,new faceapi.TinyFaceDetectorOptions())
           .withFaceLandmarks()
+          .withFaceExpressions()
+          .withAgeAndGender()
           .withFaceDescriptors();
 
         const resizedDetections = faceapi.resizeResults(detections, displaySize);
@@ -55,23 +75,40 @@ const VideoRecognition = () => {
         const results = resizedDetections.map((d) => {
           return faceMatcher.findBestMatch(d.descriptor);
         });
-        results.forEach((result, i) => {
-          const box = resizedDetections[i].detection.box;
-          const drawBox = new faceapi.draw.DrawBox(box, {
-            label: result.toString(),
-          });
-          drawBox.draw(canvas);
-        });
-      }, 100);
+        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+        faceapi.draw.drawDetections(canvas, resizedDetections)
+        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
+        faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
+        resizedDetections.forEach(detection => {
+          const { age, gender, genderProbability } = detection
+          new faceapi.draw.DrawTextField([
+              `${parseInt(String(age), 10)} years`,
+              `${gender} (${(genderProbability * 100).toFixed(2)})`
+          ], detection.detection.box.topRight).draw(canvas)
+      })
+      results.forEach((result, index) => {
+        const box = resizedDetections[index].detection.box
+        const { label, distance } = result
+        new faceapi.draw.DrawTextField([
+            `${label} (${(distance * 100).toFixed(2)})`
+        ], box.bottomRight).draw(canvas)
+    })
+      }, 150);
     };
 
     const getLabeledFaceDescriptions = async () => {
-      const labels = ['Sawyo'];
+      const labels = [dataUser.usuario];
+      const images = await listarImagensUsuario()
+
       return Promise.all(
         labels.map(async (label) => {
           const descriptions : any = [];
-          for (let i = 1; i <= 2; i++) {
-            const img = await faceapi.fetchImage(`labels/${label}/${i}.jpeg`);
+          for (let i = 0; i < images.length; i++) {
+            console.log(images[i])
+            const base64Response = await fetch(images[i]);
+            const blob = await base64Response.blob();
+            const img = await faceapi.bufferToImage(blob);
+            // const img = await faceapi.fetchImage(`labels/${label}/${i}.jpeg`);
             const detections = await faceapi
               .detectSingleFace(img)
               .withFaceLandmarks()

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import styles from "./styles.module.scss";
 import { ToastContainer, toast } from "react-toastify";
 import Link from "next/link";
@@ -8,36 +8,56 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Input } from "@/components/Input";
 import { Button } from "@/components/Button";
-import axios from "axios";
-import Webcam from "react-webcam";
+import { api } from "@/services/api/axios";
+import { sha512 } from "@/helpers/sha512";
+import { UserContext } from "@/context/useUser";
+import ModalAdicionarImagens from "./ModalAdicionarImagens";
 
 export default function CadastroComponent() {
   const [usuario, setUsuario] = useState("");
   const [password, setPassword] = useState("");
+  const [openModalAdicionarImagens,setOpenModalAdicionarImagens] = useState(false)
   const router = useRouter();
+  const { setDataUser } = useContext(UserContext)
 
-
+  function verificarFotosUsuario(usuarioId:number,mensagemAuth:string){
+      api.get('imagens/visualizar',{
+        params:{usuarioId,paginacao:1}
+      }).then((response) =>{
+        if(response.data.length > 0){
+          toast.success(mensagemAuth)
+          router.push('/authFace')
+        }else{
+          setOpenModalAdicionarImagens(true)
+        }
+      })
+  }
   async function autenticarUsuario() {
-    const objOptions = { username:usuario, senha:password };
+    let senhaSha512 = await sha512(password.toUpperCase());
+    const objOptions = { username:usuario, senha:senhaSha512 };
 
-    const response = await axios.post(
-      "http://localhost:5000/usuarios/consultar",
+    const response = await api.post(
+      "usuarios/consultar",
       objOptions
     );
     console.log(response);
+    const usuarioId = response.data.usuario[0].id
 
     if (response.data.type == "success") {
-      toast.success(response.data.mensagem)
-      router.push('/authFace')
+      setDataUser(response.data.usuario[0])
+      verificarFotosUsuario(usuarioId,response.data.mensagem)
     }else{
       toast.warn(response.data.mensagem)
     }
   }
 
-
-
   return (
-    <div className={styles.containerContent}>
+    <>
+      <ModalAdicionarImagens 
+      openModal={openModalAdicionarImagens}
+      setOpenModal={setOpenModalAdicionarImagens}
+      />
+      <div className={styles.containerContent}>
       <ToastContainer
         position="top-center"
         autoClose={4000}
@@ -81,11 +101,13 @@ export default function CadastroComponent() {
                 Não possui uma conta?
               </label>
               <label htmlFor="" className={styles.strongLabel}>
-                <Link href={"/login"}>&nbsp;Cadastre-se</Link>
+                <Link href={"/"}>&nbsp;Cadastre-se</Link>
               </label>
             </div>
           </div>
         </div>
     </div>
+    </>
+   
   );
 }

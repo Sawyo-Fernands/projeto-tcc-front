@@ -1,9 +1,11 @@
+'use client'
 import { ReactNode, createContext, useState } from "react";
-
 
 interface UserContextProps{
     dataUser:dataUserType;
     setDataUser:(value:dataUserType) => void;
+    openModalCapturaImagens:boolean;
+    setOpenModalCapturaImagens:(value:boolean) => void;
 }
 
 export const UserContext = createContext({} as UserContextProps)
@@ -26,9 +28,10 @@ export function UserContextProvider({children}:UserContextProviderProps){
         id:0,
         usuario:''
     })
+    const [openModalCapturaImagens, setOpenModalCapturaImagens] = useState(false);
 
     return(
-        <UserContext.Provider value={{dataUser,setDataUser}}>
+        <UserContext.Provider value={{dataUser,setDataUser,openModalCapturaImagens,setOpenModalCapturaImagens}}>
             {children}
         </UserContext.Provider>
     )
