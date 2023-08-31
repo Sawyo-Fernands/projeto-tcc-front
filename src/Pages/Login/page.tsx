@@ -21,13 +21,14 @@ export default function CadastroComponent() {
     const objOptions = { username:usuario, senha:password };
 
     const response = await axios.post(
-      "http://localhost:5000/usuarios/consultarr",
+      "http://localhost:5000/usuarios/consultar",
       objOptions
     );
     console.log(response);
 
     if (response.data.type == "success") {
       toast.success(response.data.mensagem)
+      router.push('/authFace')
     }else{
       toast.warn(response.data.mensagem)
     }
@@ -75,7 +76,7 @@ export default function CadastroComponent() {
                 placeholder="Digite sua senha"
                 type="password"
               />
-              <Button onClick={autenticarUsuario}>Cadastrar</Button>
+              <Button onClick={autenticarUsuario}>Autenticar</Button>
               <label htmlFor="" className={styles.labelSingUp}>
                 Não possui uma conta?
               </label>
