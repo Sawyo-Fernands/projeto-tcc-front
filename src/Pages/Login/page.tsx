@@ -95,8 +95,11 @@ export default function CadastroComponent() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Digite sua senha"
                 type="password"
+                onKeyDownCapture={(e)=>{
+                  if(e.key == 'Enter') document.getElementById("buttonAuth")?.focus()
+                }}
               />
-              <Button onClick={autenticarUsuario}>Autenticar</Button>
+              <Button onClick={autenticarUsuario} id='buttonAuth'>Autenticar</Button>
               <label htmlFor="" className={styles.labelSingUp}>
                 Não possui uma conta?
               </label>

@@ -1,15 +1,17 @@
 
 'use client'
 
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import * as faceapi from 'face-api.js';
 import { UserContext } from '@/context/useUser';
 import { api } from '@/services/api/axios';
+import Loading from '@/components/Loading';
 
 const VideoRecognition = () => {
   const videoRef = useRef<any>(null);
   const canvasRef = useRef<any>(null);
   const { dataUser } = useContext(UserContext)
+  const [openLoading,setOpenLoading] = useState(true)
 
   async function listarImagensUsuario(){
     const response = await api.get("imagens/visualizar",{
@@ -116,6 +118,7 @@ const VideoRecognition = () => {
             descriptions.push(detections?.descriptor);
           }
           console.log(descriptions)
+          setOpenLoading(false)
           return new faceapi.LabeledFaceDescriptors(label, descriptions);
         })
       );
@@ -126,6 +129,8 @@ const VideoRecognition = () => {
   }, []);
 
   return (
+    <>
+    <Loading openModal={openLoading} />
     <div style={{ position: 'relative' }}>
       <video
         ref={videoRef}
@@ -138,6 +143,8 @@ const VideoRecognition = () => {
       ></video>
       <canvas ref={canvasRef} id="overlay" style={{ position: 'absolute', top: 0, zIndex: 20 }}></canvas>
     </div>
+    </>
+   
   );
 };
 
