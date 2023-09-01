@@ -88,11 +88,25 @@ const VideoRecognition = () => {
               `${gender} (${(genderProbability * 100).toFixed(2)})`
           ], detection.detection.box.topRight).draw(canvas)
       })
+      console.log(results)
       results.forEach((result, index) => {
         const box = resizedDetections[index].detection.box
         const { label, distance } = result
+        const threshold = 0.5;
+
+        if (distance < threshold) {
+          // Autenticado com sucesso
+          // Realize as ações apropriadas aqui
+          console.log(`Usuário autenticado como ${label}`);
+        } else {
+          // Não autenticado
+          // Tome as medidas adequadas (por exemplo, exiba uma mensagem de erro)
+          console.log('Usuário não autenticado');
+        }
+
         new faceapi.draw.DrawTextField([
-            `${label} (${(distance * 100).toFixed(2)})`
+            // `${label} (${(distance * 100).toFixed(2)})` aparecer o distance correto
+            `${label} (${((1 - distance) * 100).toFixed(2)})%` // aparecer o distance como se fosse em porcentagem de reconhecimento
         ], box.bottomRight).draw(canvas)
     })
       }, 150);
@@ -117,7 +131,7 @@ const VideoRecognition = () => {
               .withFaceDescriptor();
             if(detections?.descriptor)  descriptions.push(detections?.descriptor);
           }
-          console.log(descriptions)
+          console.log({descriptions})
           setOpenLoading(false)
           return new faceapi.LabeledFaceDescriptors(label, descriptions);
         })
