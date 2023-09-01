@@ -14,6 +14,7 @@ import ProgressBar from "@ramonak/react-progress-bar";
 import { Dialog } from "@mui/material";
 import { sha512 } from "@/helpers/sha512";
 import { UserContext } from "@/context/useUser";
+import { MdCameraAlt,MdCheckCircle,MdPersonAdd } from 'react-icons/md';
 
 export default function CadastroComponent() {
   const [usuario, setUsuario] = useState("");
@@ -186,18 +187,19 @@ export default function CadastroComponent() {
                 }}
               >
                 <Button onClick={() => setStartCapture(true)}>
-                  Capturar Imagem
+                 <MdCameraAlt size={18} /> Capturar Imagem
                 </Button>
-                <Button onClick={cadastrarFaceUsuario}>
-                  Finalizar Cadastro
+                <Button onClick={cadastrarFaceUsuario} disabled={startCapture}>
+                  <MdCheckCircle size={18} />Finalizar Cadastro
                 </Button>
               </div>
             </div>
             <div className={styles.containerImages}>
               {imagensCapturadas.length > 0 &&
                 imagensCapturadas.map((img: string, index: number) => (
-                  <div className={styles.img} key={index}>
+                  <div className={styles.img} key={index} style={{marginBottom:"1.55rem"}}>
                     <img src={img} alt="" />
+                    <span>Captura - {index + 1}</span>
                   </div>
                 ))}
             </div>
@@ -237,7 +239,7 @@ export default function CadastroComponent() {
                   placeholder="Digite sua senha"
                   type="password"
                 />
-                <Button onClick={criarUsuario}>Cadastrar</Button>
+                <Button onClick={criarUsuario}><MdPersonAdd size={18} /> Cadastrar</Button>
                 <label htmlFor="" className={styles.labelSingUp}>
                   Já possui uma conta?
                 </label>

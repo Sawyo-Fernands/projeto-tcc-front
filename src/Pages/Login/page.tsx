@@ -12,7 +12,7 @@ import { api } from "@/services/api/axios";
 import { sha512 } from "@/helpers/sha512";
 import { UserContext } from "@/context/useUser";
 import ModalAdicionarImagens from "./ModalAdicionarImagens";
-
+import { MdLogin } from 'react-icons/md'
 export default function CadastroComponent() {
   const [usuario, setUsuario] = useState("");
   const [password, setPassword] = useState("");
@@ -41,9 +41,9 @@ export default function CadastroComponent() {
       objOptions
     );
     console.log(response);
-    const usuarioId = response.data.usuario[0].id
 
     if (response.data.type == "success") {
+    const usuarioId = response.data.usuario[0].id
       setDataUser(response.data.usuario[0])
       verificarFotosUsuario(usuarioId,response.data.mensagem)
     }else{
@@ -99,7 +99,7 @@ export default function CadastroComponent() {
                   if(e.key == 'Enter') document.getElementById("buttonAuth")?.focus()
                 }}
               />
-              <Button onClick={autenticarUsuario} id='buttonAuth'>Autenticar</Button>
+              <Button onClick={autenticarUsuario} id='buttonAuth'><MdLogin size={18} /> Autenticar</Button>
               <label htmlFor="" className={styles.labelSingUp}>
                 Não possui uma conta?
               </label>

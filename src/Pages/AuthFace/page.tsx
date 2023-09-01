@@ -106,7 +106,7 @@ const VideoRecognition = () => {
         labels.map(async (label) => {
           const descriptions : any = [];
           for (let i = 0; i < images.length; i++) {
-            console.log(images[i])
+            // console.log(images[i])
             const base64Response = await fetch(images[i]);
             const blob = await base64Response.blob();
             const img = await faceapi.bufferToImage(blob);
@@ -115,7 +115,7 @@ const VideoRecognition = () => {
               .detectSingleFace(img)
               .withFaceLandmarks()
               .withFaceDescriptor();
-            descriptions.push(detections?.descriptor);
+            if(detections?.descriptor)  descriptions.push(detections?.descriptor);
           }
           console.log(descriptions)
           setOpenLoading(false)

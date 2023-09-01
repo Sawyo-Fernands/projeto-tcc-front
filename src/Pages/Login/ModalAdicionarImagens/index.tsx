@@ -4,7 +4,7 @@ import Modal from '@mui/material/Modal';
 import { Button } from '@/components/Button';
 import { UserContext } from '@/context/useUser';
 import { useRouter } from "next/navigation";
-
+import { MdAddAPhoto } from 'react-icons/md';
 const style = {
   position: 'absolute' as 'absolute',
   top: '50%',
@@ -42,7 +42,7 @@ export default function ModalAdicionarImagens({openModal,setOpenModal}:ModalAdic
           <Button  onClick={()=>{
             setOpenModalCapturaImagens(true)
             router.push('/')
-          }}>Cadastrar Imagens</Button>
+          }}><MdAddAPhoto size={18} />Cadastrar Imagens</Button>
         </Box>
       </Modal>
   );
