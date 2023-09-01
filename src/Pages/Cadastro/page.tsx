@@ -160,13 +160,16 @@ export default function CadastroComponent() {
           <>
             <div className={styles.containerPhoto}>
               <div className={styles.containerTitle}>
-                <h3>Cadastro Facial </h3>
+                <div >
+                 <span style={{fontSize:"1.2rem"}}>Cadastro Facial </span>
+                </div>
               </div>
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
+                  marginTop:"-3rem"
                 }}
               >
                 <Webcam

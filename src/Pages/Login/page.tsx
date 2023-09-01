@@ -18,7 +18,7 @@ export default function CadastroComponent() {
   const [password, setPassword] = useState("");
   const [openModalAdicionarImagens,setOpenModalAdicionarImagens] = useState(false)
   const router = useRouter();
-  const { setDataUser } = useContext(UserContext)
+  const { setDataUser,dataUser } = useContext(UserContext)
 
   function verificarFotosUsuario(usuarioId:number,mensagemAuth:string){
       api.get('imagens/visualizar',{
