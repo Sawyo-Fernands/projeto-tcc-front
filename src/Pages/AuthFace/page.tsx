@@ -10,10 +10,12 @@ import styles from './styles.module.scss';
 import { HeaderAuthFace } from './Header';
 import ModalAddPassword from './ModalAddPassword';
 import { ToastContainer, toast } from 'react-toastify';
+import Webcam from 'react-webcam';
 
 const VideoRecognition = () => {
   const videoRef = useRef<any>(null);
   const canvasRef = useRef<any>(null);
+  const canvasRefScreenShot = useRef<any>(null);
   const { dataUser } = useContext(UserContext)
   const [openLoading,setOpenLoading] = useState(true)
 
@@ -152,6 +154,22 @@ const VideoRecognition = () => {
     runFaceApi();
   }, []);
 
+  const capturarScreenshot = () => {
+    const video = videoRef.current;
+    const canvas = canvasRefScreenShot.current;
+
+    if (video && canvas) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      const context = canvas.getContext('2d');
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const dataUrl = canvas.toDataURL('image/png');
+      return dataUrl
+    }
+  };
+
 
 
   return (
@@ -168,7 +186,7 @@ const VideoRecognition = () => {
           pauseOnHover
           theme="light"
         />
-    <ModalAddPassword openModal={openModalSetPassworsd} />
+    <ModalAddPassword openModal={openModalSetPassworsd} capturarScreenshot={capturarScreenshot} />
     <Loading openModal={openLoading} />
     <HeaderAuthFace />
     <div style={{ position: 'relative' }} className={styles.containerMain}>
@@ -182,7 +200,11 @@ const VideoRecognition = () => {
         playsInline
       ></video>
       <canvas ref={canvasRef} id="overlay" style={{ position: 'absolute', top: '16%', zIndex: 200,left:'31%' }}></canvas>
+      
     </div>
+    <div style={{ display: 'none'}}>
+       <canvas ref={canvasRefScreenShot} style={{ display: 'none' }}></canvas>
+      </div>
     </>
    
   );
