@@ -6,12 +6,18 @@ import * as faceapi from 'face-api.js';
 import { UserContext } from '@/context/useUser';
 import { api } from '@/services/api/axios';
 import Loading from '@/components/Loading';
+import styles from './styles.module.scss';
+import { HeaderAuthFace } from './Header';
+import ModalAddPassword from './ModalAddPassword';
+import { ToastContainer, toast } from 'react-toastify';
 
 const VideoRecognition = () => {
   const videoRef = useRef<any>(null);
   const canvasRef = useRef<any>(null);
   const { dataUser } = useContext(UserContext)
   const [openLoading,setOpenLoading] = useState(true)
+
+  const [openModalSetPassworsd,setOpenModalSetPassword] = useState(false)
 
   async function listarImagensUsuario(){
     const response = await api.get("imagens/visualizar",{
@@ -88,7 +94,7 @@ const VideoRecognition = () => {
               `${gender} (${(genderProbability * 100).toFixed(2)})`
           ], detection.detection.box.topRight).draw(canvas)
       })
-      console.log(results)
+      // console.log(results)
       results.forEach((result, index) => {
         const box = resizedDetections[index].detection.box
         const { label, distance } = result
@@ -98,6 +104,9 @@ const VideoRecognition = () => {
           // Autenticado com sucesso
           // Realize as ações apropriadas aqui
           console.log(`Usuário autenticado como ${label}`);
+          setTimeout(() => {
+            if(!openModalSetPassworsd) setOpenModalSetPassword(true)
+          }, 7000);
         } else {
           // Não autenticado
           // Tome as medidas adequadas (por exemplo, exiba uma mensagem de erro)
@@ -133,6 +142,7 @@ const VideoRecognition = () => {
           }
           console.log({descriptions})
           setOpenLoading(false)
+          toast.info("Atenção! Aguarde 7 segundos.")
           return new faceapi.LabeledFaceDescriptors(label, descriptions);
         })
       );
@@ -142,10 +152,26 @@ const VideoRecognition = () => {
     runFaceApi();
   }, []);
 
+
+
   return (
     <>
+     <ToastContainer
+          position="top-center"
+          autoClose={4000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+    <ModalAddPassword openModal={openModalSetPassworsd} />
     <Loading openModal={openLoading} />
-    <div style={{ position: 'relative' }}>
+    <HeaderAuthFace />
+    <div style={{ position: 'relative' }} className={styles.containerMain}>
       <video
         ref={videoRef}
         height="560"
@@ -155,7 +181,7 @@ const VideoRecognition = () => {
         muted
         playsInline
       ></video>
-      <canvas ref={canvasRef} id="overlay" style={{ position: 'absolute', top: 0, zIndex: 20 }}></canvas>
+      <canvas ref={canvasRef} id="overlay" style={{ position: 'absolute', top: '16%', zIndex: 200,left:'31%' }}></canvas>
     </div>
     </>
    

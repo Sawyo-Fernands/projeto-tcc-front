@@ -15,10 +15,10 @@ import ModalAdicionarImagens from "./ModalAdicionarImagens";
 import { MdLogin } from 'react-icons/md'
 export default function CadastroComponent() {
   const [usuario, setUsuario] = useState("");
-  const [password, setPassword] = useState("");
+  // const [password, setPassword] = useState("");
   const [openModalAdicionarImagens,setOpenModalAdicionarImagens] = useState(false)
   const router = useRouter();
-  const { setDataUser,dataUser } = useContext(UserContext)
+  const { setDataUser } = useContext(UserContext)
 
   function verificarFotosUsuario(usuarioId:number,mensagemAuth:string){
       api.get('imagens/visualizar',{
@@ -33,8 +33,8 @@ export default function CadastroComponent() {
       })
   }
   async function autenticarUsuario() {
-    let senhaSha512 = await sha512(password.toUpperCase());
-    const objOptions = { username:usuario, senha:senhaSha512 };
+    
+    const objOptions = { username:usuario };
 
     const response = await api.post(
       "usuarios/consultar",
@@ -88,17 +88,17 @@ export default function CadastroComponent() {
                 onChange={(e) => setUsuario(e.target.value)}
                 placeholder="Digite o nome do usuário"
                 type="text"
+                onKeyDownCapture={(e)=>{
+                  if(e.key == 'Enter') document.getElementById("buttonAuth")?.focus()
+                }}
               />
-              <Input
+              {/* <Input
                 name="senha"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Digite sua senha"
                 type="password"
-                onKeyDownCapture={(e)=>{
-                  if(e.key == 'Enter') document.getElementById("buttonAuth")?.focus()
-                }}
-              />
+              /> */}
               <Button onClick={autenticarUsuario} id='buttonAuth'><MdLogin size={18} /> Autenticar</Button>
               <label htmlFor="" className={styles.labelSingUp}>
                 Não possui uma conta?
