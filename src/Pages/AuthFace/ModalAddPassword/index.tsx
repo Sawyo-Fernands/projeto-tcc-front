@@ -9,6 +9,7 @@ import { Input } from "@/components/Input";
 import { api } from "@/services/api/axios";
 import { sha512 } from "@/helpers/sha512";
 import { MdLock } from "react-icons/md";
+import { useRouter } from "next/navigation";
 const style = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -26,15 +27,19 @@ const style = {
 interface ModalAdicionarImagensProps {
   openModal: boolean;
   capturarScreenshot: () => string;
+  setDisableCam:(value:boolean) => void;
 }
 export default function ModalAddPassword({
   openModal,
+  setDisableCam,
   capturarScreenshot,
 }: ModalAdicionarImagensProps) {
+  const router = useRouter()
+  const fotoUsuario = capturarScreenshot();
   const { dataUser } = React.useContext(UserContext);
   const [password, setPassword] = React.useState("");
   const [openModalCredencials, setOpenModalCredencials] = React.useState(false);
-  const fotoUsuario = capturarScreenshot();
+
   async function autenticarUsuario() {
     let senhaSha512 = await sha512(password.toUpperCase());
     const objOptions = {
@@ -46,15 +51,18 @@ export default function ModalAddPassword({
       .post("usuarios/gerarToken", objOptions)
       .then((response) => {
         console.log(response);
-        setOpenModalCredencials(true);
-        localStorage.setItem('tokenTCC',response.data.token)
+        if(response.data.type == 'success'){
+          setOpenModalCredencials(true);
+          localStorage.setItem('tokenTCC',response.data.token)
+          setDisableCam(true)
+
+          setTimeout(() => {
+            router.push("/listaItens")
+          }, 3000);
+        }
       })
       .catch((error) => console.log(error))
-      .finally(() => {
-        setTimeout(() => {
-          window.location.href = "/listaItens";
-        }, 3000);
-      });
+  
   }
 
   return (

@@ -18,7 +18,7 @@ const VideoRecognition = () => {
   const canvasRefScreenShot = useRef<any>(null);
   const { dataUser } = useContext(UserContext)
   const [openLoading,setOpenLoading] = useState(true)
-
+  const [disableCam,setDisableCam] = useState(false)
   const [openModalSetPassworsd,setOpenModalSetPassword] = useState(false)
 
   async function listarImagensUsuario(){
@@ -44,6 +44,11 @@ const VideoRecognition = () => {
 
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
       videoRef.current.srcObject = stream;
+
+      if (stream && disableCam) {
+        const tracks = stream.getTracks();
+        tracks.forEach((track) => track.stop());
+      }
     };
 
     const loadModels = async () => {
@@ -149,10 +154,10 @@ const VideoRecognition = () => {
         })
       );
     };
-
+    if(disableCam) return
     startVideo();
     runFaceApi();
-  }, []);
+  }, [disableCam]);
 
   const capturarScreenshot = () => {
     const video = videoRef.current;
@@ -170,8 +175,6 @@ const VideoRecognition = () => {
     }
   };
 
-
-
   return (
     <>
      <ToastContainer
@@ -186,7 +189,7 @@ const VideoRecognition = () => {
           pauseOnHover
           theme="light"
         />
-    <ModalAddPassword openModal={openModalSetPassworsd} capturarScreenshot={capturarScreenshot} />
+    <ModalAddPassword setDisableCam={setDisableCam} openModal={openModalSetPassworsd} capturarScreenshot={capturarScreenshot} />
     <Loading openModal={openLoading} />
     <HeaderAuthFace />
     <div style={{ position: 'relative' }} className={styles.containerMain}>
@@ -199,12 +202,13 @@ const VideoRecognition = () => {
         muted
         playsInline
       ></video>
-      <canvas ref={canvasRef} id="overlay" style={{ position: 'absolute', top: '16%', zIndex: 200,left:'31%' }}></canvas>
+      <canvas ref={canvasRef} id="overlay" style={{ position: 'absolute', top: '16%', zIndex: `${disableCam ? '0' : '200'}`,left:'31%',display:`${disableCam ? 'none' : 'block'}` }}></canvas>
       
     </div>
+    
     <div style={{ display: 'none'}}>
        <canvas ref={canvasRefScreenShot} style={{ display: 'none' }}></canvas>
-      </div>
+    </div>
     </>
    
   );

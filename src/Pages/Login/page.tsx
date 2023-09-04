@@ -80,7 +80,7 @@ export default function CadastroComponent() {
                 alt="Picture of the author"
               />
               <label htmlFor="" className={styles.label}>
-                Cadastro
+                Login
               </label>
               <Input
                 name="Usuário"
@@ -99,7 +99,7 @@ export default function CadastroComponent() {
                 placeholder="Digite sua senha"
                 type="password"
               /> */}
-              <Button onClick={autenticarUsuario} id='buttonAuth'><MdLogin size={18} /> Autenticar</Button>
+              <Button onClick={autenticarUsuario} id='buttonAuth'><MdLogin size={18} /> Verificar </Button>
               <label htmlFor="" className={styles.labelSingUp}>
                 Não possui uma conta?
               </label>

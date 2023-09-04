@@ -2,6 +2,9 @@ import { UserContextProvider } from '@/context/useUser';
 import './globals.css'
 import { Inter } from 'next/font/google'
 import 'react-toastify/dist/ReactToastify.css';
+//improtando estilo da tabela
+import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
+import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
 
 const inter = Inter({ subsets: ['latin'] })
 
