@@ -26,12 +26,13 @@ const style = {
 };
 
 type itensEstoqueType = {
-  itemId: number;
+  idItem: number;
   nomeItem: string;
   dataCriacao: string;
   valorItem: string;
   idUsuarioCriador: number;
   nomeUsuarioCriador: string;
+  descricao:string;
 };
 
 interface ModaladicionarItensProps {

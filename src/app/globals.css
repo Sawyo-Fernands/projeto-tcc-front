@@ -20,3 +20,17 @@ a {
 }
 
 
+.ag-theme-alpine, .ag-theme-alpine-dark  {
+  --ag-selected-row-background-color:#e0e0e0 !important;
+  --ag-row-hover-color: #e0e0e0 !important;
+  --ag-alpine-active-color: transparent !important;
+  /* --ag-header-foreground-color: white;
+  --ag-header-background-color: black;
+  --ag-header-cell-hover-background-color: black;
+  --ag-header-cell-moving-background-color: black ; */
+
+  --ag-checkbox-background-color: white !important;
+  --ag-checkbox-checked-color: blue !important;
+  --ag-checkbox-unchecked-color: grey !important;
+  --ag-checkbox-indeterminate-color: grey !important;
+}

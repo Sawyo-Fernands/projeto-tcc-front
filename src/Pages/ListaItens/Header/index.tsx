@@ -18,7 +18,6 @@ export function HeaderListaItens(){
         })
         window.location.href = '/login'
       }
-      console.log(dataUser)
     return(
         <header className={styles.header}>
         <div className={styles.containerNav}>

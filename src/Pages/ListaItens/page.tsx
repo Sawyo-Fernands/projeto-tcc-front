@@ -6,13 +6,17 @@ import { AgGridReact } from "ag-grid-react";
 import { api } from "@/services/api/axios";
 import { AG_GRID_LOCALE_PT_BR } from "@/helpers/agGridPtBR";
 import ModalAdicionarItem from "./ModalAdicionarItem";
-import { Button } from "@mui/material";
+import { Button, IconButton, Tooltip } from "@mui/material";
 import { MdAddCircle } from "react-icons/md";
 import { useGetInfosUser } from "@/hooks/useGetInfosUser";
-
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Edit } from "@mui/icons-material"; 
+import { toast } from "react-toastify";
+import ModalAlterarValor from "./ModalAlterarValor";
 type itensEstoqueType = {
-  itemId: number;
+idItem: number;
   nomeItem: string;
+  descricao:string;
   dataCriacao: string;
   valorItem: string;
   idUsuarioCriador: number;
@@ -25,6 +29,7 @@ export function ListaItensComponent() {
   const [itensEstoque, setItensEstoque] = useState<itensEstoqueType[]>([]);
   const [selectedRow, setSelectedRow] = useState<itensEstoqueType>();
   const [openModalAdicionarItem, setOpenModalAdicionarItem] = useState(false);
+  const [openModalAlterarValor,setOpenModalAlterarValor] = useState(false)
 
   const cellStyle = (params: any) => {
     return {
@@ -33,7 +38,22 @@ export function ListaItensComponent() {
     };
   };
 
+  function removerItem(objOptions:{itemId:number}){
+    api.post('itens/remover',objOptions)
+    .then((response) => {
+        console.log("aq")
+        if(response.data.type == 'success'){
+            toast.success(response.data.mensagem)
+            listarIntensEstoque()
+        }else{
+            toast.warn(response.data.mensagem)
+        }
+    })
+    .catch((error) => console.error(error))
+  }
+  
   const [columnDefs, setColumnDefs] = useState<any>([
+ 
     {
       headerName: "N° Item",
       field: "idItem",
@@ -110,37 +130,104 @@ export function ListaItensComponent() {
       sortable: true,
       cellStyle: cellStyle,
       headerClass: "headerTable",
-      width: "250px",
+      width: "200px",
     },
+    {
+        headerName: '',
+        field: '',
+        headerClass: 'headerTable',
+        width: '50px',
+        resizable: false,
+        lockPosition: 'left',
+        filter: true,
+        sortable: true,
+        cellStyle: cellStyle,
+        cellRenderer: (params: any) => {
+          return (
+            <div style={{ display: 'flex',marginTop:"0.3rem" }}>
+              <Tooltip title="Alterar Valor ">
+                <IconButton
+                  size="small"
+                  onClick={(event) => {
+                    setOpenModalAlterarValor(true)
+                  }}
+                >
+                  <span style={{color: '#62c948'}}>
+                    <Edit fontSize="small" />
+                  </span>
+                </IconButton>
+              </Tooltip>
+            </div>
+          );
+        },
+      },
+    {
+        headerName: '',
+        field: '',
+        headerClass: 'headerTable',
+        width: '50px',
+        resizable: false,
+        lockPosition: 'left',
+        filter: true,
+        sortable: true,
+        cellStyle: cellStyle,
+        cellRenderer: (params: any) => {
+          return (
+            <div style={{ display: 'flex',marginTop:"0.3rem" }}>
+              <Tooltip title="Remover Item">
+                <IconButton
+                  size="small"
+                  onClick={(event) => {
+                    removerItem({
+                        itemId: params.data.idItem,
+                    })
+                  }}
+                >
+                  <span style={{color: '#c94848'}}>
+                    <DeleteIcon fontSize="small" />
+                  </span>
+                </IconButton>
+              </Tooltip>
+            </div>
+          );
+        },
+      },
   ]);
 
-  const defaultColDef = useMemo(
-    () => ({
+  const defaultColDef = useMemo(() => ({
       sortable: true,
-    }),
-    []
-  );
+    }),[]);
 
   const cellClickedListener = useCallback((event: any) => {
-    console.log("cellClicked", event.data);
     setSelectedRow(event.data);
   }, []);
 
   useEffect(() => {
-    getDataUsuario();
     listarIntensEstoque();
   }, []);
 
+  useEffect(()=>{
+    getDataUsuario();
+  },[])
+
   async function listarIntensEstoque() {
+    console.log("aqui karalho")
     const itensResponse = await api.get("itens/listar");
     if (itensResponse.data) setItensEstoque(itensResponse.data);
   }
+
   function atualizarListagem(value: itensEstoqueType) {
     setItensEstoque([...itensEstoque, value]);
   }
 
   return (
     <>
+      <ModalAlterarValor 
+      listarIntensEstoque={listarIntensEstoque}
+      openModal={openModalAlterarValor}
+      setOpenModal={setOpenModalAlterarValor}
+      selectedRow={selectedRow}
+      />
       <ModalAdicionarItem
         atualizarListagem={atualizarListagem}
         openModal={openModalAdicionarItem}
