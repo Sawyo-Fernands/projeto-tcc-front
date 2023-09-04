@@ -6,7 +6,7 @@ import Modal from "@mui/material/Modal";
 import { UserContext } from "@/context/useUser";
 import { Input } from "@/components/Input";
 import { api } from "@/services/api/axios";
-import { MdAddCircle, MdCancel, MdEdit, MdLock, MdPhoto } from "react-icons/md";
+import { MdAddCircle, MdCameraEnhance, MdCancel, MdEdit, MdLock, MdPhoto } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import styles from "./styles.module.scss";
 import { toast } from "react-toastify";
@@ -175,7 +175,7 @@ export default function ModalAlterarValor({
               <div
                 style={{ display: "flex", alignItems: "center", gap: "0.2rem" }}
               >
-                <MdPhoto size={18} /> Verificar
+                <MdCameraEnhance size={18} /> Verificar
               </div>
             </Button>
           </div>
