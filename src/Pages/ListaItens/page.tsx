@@ -13,6 +13,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Edit } from "@mui/icons-material"; 
 import { toast } from "react-toastify";
 import ModalAlterarValor from "./ModalAlterarValor";
+import Loading from "@/components/Loading";
 type itensEstoqueType = {
 idItem: number;
   nomeItem: string;
@@ -30,6 +31,7 @@ export function ListaItensComponent() {
   const [selectedRow, setSelectedRow] = useState<itensEstoqueType>();
   const [openModalAdicionarItem, setOpenModalAdicionarItem] = useState(false);
   const [openModalAlterarValor,setOpenModalAlterarValor] = useState(false)
+  const [openLoading,setOpenLoading] = useState(false)
 
   const cellStyle = (params: any) => {
     return {
@@ -51,7 +53,7 @@ export function ListaItensComponent() {
     })
     .catch((error) => console.error(error))
   }
-  
+
   const [columnDefs, setColumnDefs] = useState<any>([
  
     {
@@ -211,9 +213,10 @@ export function ListaItensComponent() {
   },[])
 
   async function listarIntensEstoque() {
-    console.log("aqui karalho")
+    setOpenLoading(true)
     const itensResponse = await api.get("itens/listar");
     if (itensResponse.data) setItensEstoque(itensResponse.data);
+    setOpenLoading(false)
   }
 
   function atualizarListagem(value: itensEstoqueType) {
@@ -222,6 +225,7 @@ export function ListaItensComponent() {
 
   return (
     <>
+      <Loading openModal={openLoading} text='Listando itens do estoque...' />
       <ModalAlterarValor 
       listarIntensEstoque={listarIntensEstoque}
       openModal={openModalAlterarValor}

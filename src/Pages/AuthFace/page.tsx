@@ -190,7 +190,7 @@ const VideoRecognition = () => {
           theme="light"
         />
     <ModalAddPassword setDisableCam={setDisableCam} openModal={openModalSetPassworsd} capturarScreenshot={capturarScreenshot} />
-    <Loading openModal={openLoading} />
+    <Loading openModal={openLoading} text='Carregando reconhecimento facial...' />
     <HeaderAuthFace />
     <div style={{ position: 'relative' }} className={styles.containerMain}>
       <video

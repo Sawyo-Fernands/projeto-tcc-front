@@ -22,8 +22,9 @@ const style = {
 
 interface ModalAdicionarImagensProps{
     openModal:boolean;
+    text:string;
 }
-export default function Loading({openModal}:ModalAdicionarImagensProps) {
+export default function Loading({openModal,text}:ModalAdicionarImagensProps) {
 
   return (
       <Modal
@@ -35,7 +36,8 @@ export default function Loading({openModal}:ModalAdicionarImagensProps) {
             <div style={{width:'100%',display:"flex",flexDirection:"column",gap:"0.2rem",justifyContent:"center",alignItems:"center"}}>
                 <CircularProgress size={110} />
                 <p id="parent-modal-description" style={{padding:"0.3rem"}}>
-                    Carregando reconhecimento facial...
+                    
+                    {text}
                 </p>
             </div>
           
